@@ -52,7 +52,8 @@ const createTooltip = () => {
     const tooltip = innerChartS
         .append("g")
         .attr("class", "tooltip")
-        .style("opacity", 0);
+        .style("opacity", 0)
+        .style("pointer-events", "none"); // don't block hover on circles below
     // Step 3.3 Append tooltip background rectangle
     const tooltipRect = tooltip.append("rect")
         .attr("width", tooltipWidth)
@@ -62,6 +63,15 @@ const createTooltip = () => {
         .attr("rx", 3) // Rounded corners
         .attr("ry", 3);
     // Step 3.4 Apped tooltip text
+    // handleMouseEvents() fills this text on hover
+    tooltip.append("text")
+        .attr("x", tooltipWidth / 2)   // centre horizontally in the box
+        .attr("y", tooltipHeight / 2)  // centre vertically in the box
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "middle")
+        .attr("fill", "white")
+        .style("font-size", "13px")
+        .text("");
 
 };
 
@@ -76,8 +86,6 @@ const handleMouseEvents = () => {
             console.log("Mouse entered circle:", d);
             tooltip.select("text")
                 .text(`${d.screenSize} inches`);
-            d3.select(".tooltip text")
-            .text(d.screenSize);
             // Get the hovered circle's position
             const cx = e.target.getAttribute("cx");
             const cy = e.target.getAttribute("cy");
